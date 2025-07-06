@@ -1,20 +1,31 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from flask import Flask, request, jsonify
 import pickle
 import mlflow
-from train_model import preprocess_text, load_data, train_model
+from spam_detection import preprocess_text, load_data, train_model
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
+import logging
 
 app = Flask(__name__)
 
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+
 # Load trained model and vectorizer
-model = pickle.load(open('best_model.pkl', 'rb'))
-vectorizer = pickle.load(open('vectorizer.pkl', 'rb'))
+try:
+    model = pickle.load(open('best_model.pkl', 'rb'))
+    vectorizer = pickle.load(open('vectorizer.pkl', 'rb'))
+except Exception as e:
+    logging.error(f"Error loading model or vectorizer: {str(e)}")
+    raise
 
 # GET endpoint for best model parameters
 @app.route('/best_model_parameters', methods=['GET'])
 def get_best_parameters():
-    # Retrieve the latest MLflow run
+    logging.debug("Received request for /best_model_parameters")
     experiment = mlflow.get_experiment_by_name("spam_detection_experiment")
     runs = mlflow.search_runs(experiment_ids=[experiment.experiment_id])
     if not runs.empty:
@@ -27,23 +38,33 @@ def get_best_parameters():
 # POST endpoint for prediction
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.get_json()
-    if 'message' not in data:
-        return jsonify({"error": "Message field required"}), 400
-    
-    message = preprocess_text(data['message'])
-    message_vec = vectorizer.transform([message])
-    prediction = model.predict(message_vec)[0]
-    label = 'spam' if prediction == 1 else 'ham'
-    return jsonify({"prediction": label})
+    logging.debug("Received request for /predict")
+    try:
+        data = request.get_json(force=True)
+        logging.debug(f"Received JSON: {data}")
+        if 'message' not in data:
+            logging.error("Missing 'message' field in JSON")
+            return jsonify({"error": "Message field required"}), 400
+        message = preprocess_text(data['message'])
+        logging.debug(f"Preprocessed message: {message}")
+        message_vec = vectorizer.transform([message])
+        prediction = model.predict(message_vec)[0]
+        label = 'spam' if prediction == 1 else 'ham'
+        logging.debug(f"Prediction: {label}")
+        return jsonify({"prediction": label})
+    except Exception as e:
+        logging.error(f"Error in predict endpoint: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 # POST endpoint for training
 @app.route('/train', methods=['POST'])
 def train():
+    logging.debug("Received request for /train")
     try:
         train_model()
         return jsonify({"status": "Training completed"})
     except Exception as e:
+        logging.error(f"Error in train endpoint: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
