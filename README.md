@@ -91,8 +91,8 @@ This project implements a machine learning model to classify SMS messages as spa
    - Access the image at: `https://hub.docker.com/r/yourusername/spam-detection`
 
 ## Contributors
-- **Parth**: Implemented data preprocessing and model training (`train_model.py`), MLflow integration.
-- **Swarup**: Developed Flask API (`app.py`) and managed dependencies (`requirements.txt`).
+- **Swarup**: Implemented data preprocessing and model training (`train_model.py`), MLflow integration.
+- **Parth**: Developed Flask API (`app.py`) and managed dependencies (`requirements.txt`).
 - **Hitesh**: Created Docker configuration (`Dockerfile`) and deployment instructions.
 
 ## Notes
