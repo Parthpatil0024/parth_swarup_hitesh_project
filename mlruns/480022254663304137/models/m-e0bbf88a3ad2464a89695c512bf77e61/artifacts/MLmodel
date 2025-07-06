@@ -1,0 +1,22 @@
+artifact_path: file:///E:/parth_swarup_hitesh_project/mlruns/480022254663304137/models/m-e0bbf88a3ad2464a89695c512bf77e61/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.11.9
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+mlflow_version: 3.1.1
+model_id: m-e0bbf88a3ad2464a89695c512bf77e61
+model_size_bytes: 14924942
+model_uuid: m-e0bbf88a3ad2464a89695c512bf77e61
+prompts: null
+run_id: a6cdddcf8a1b4117a024353d0ef1f6df
+utc_time_created: '2025-07-06 17:01:17.817229'

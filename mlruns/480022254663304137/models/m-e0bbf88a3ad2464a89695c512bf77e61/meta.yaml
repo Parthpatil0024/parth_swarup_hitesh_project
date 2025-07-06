@@ -1,0 +1,10 @@
+artifact_location: file:///E:/parth_swarup_hitesh_project/mlruns/480022254663304137/models/m-e0bbf88a3ad2464a89695c512bf77e61/artifacts
+creation_timestamp: 1751821277727
+experiment_id: '480022254663304137'
+last_updated_timestamp: 1751821284208
+model_id: m-e0bbf88a3ad2464a89695c512bf77e61
+model_type: null
+name: model
+source_run_id: a6cdddcf8a1b4117a024353d0ef1f6df
+status: 2
+status_message: null
